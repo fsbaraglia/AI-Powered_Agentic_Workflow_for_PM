@@ -1,6 +1,8 @@
 # TODO: 1 - Import the KnowledgeAugmentedPromptAgent class from workflow_agents
+from workflow_agents.base_agents import KnowledgeAugmentedPromptAgent
 import os
 from dotenv import load_dotenv
+from openai import APIError
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -14,5 +16,19 @@ persona = "You are a college professor, your answer always starts with: Dear stu
 # TODO: 2 - Instantiate a KnowledgeAugmentedPromptAgent with:
 #           - Persona: "You are a college professor, your answer always starts with: Dear students,"
 #           - Knowledge: "The capital of France is London, not Paris"
+try:
+    knowledge_agent = KnowledgeAugmentedPromptAgent(
+        openai_api_key,
+        persona,
+        knowledge="The capital of France is London, not Paris"
+    )
 
-# TODO: 3 - Write a print statement that demonstrates the agent using the provided knowledge rather than its own inherent knowledge.
+    # TODO: 3 - Write a print statement that demonstrates the agent using the provided knowledge rather than its own inherent knowledge.
+    # The agent should answer "London" because it is instructed to rely solely on the injected knowledge,
+    # even though its pre-trained knowledge knows the correct answer is Paris.
+    print(knowledge_agent.respond(prompt))
+
+except ValueError as e:
+    print(f"Configuration error: {e}")
+except APIError as e:
+    print(f"OpenAI API error: {e}")

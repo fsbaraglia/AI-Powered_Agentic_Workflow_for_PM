@@ -1,0 +1,79 @@
+python3 action_planning_agent.py 
+['1. Crack eggs into a bowl', '2. Beat eggs with a fork until mixed', '3. Heat pan with butter or oil over medium heat', '4. Pour egg mixture into pan', '5. Stir gently as eggs cook', '6. Remove from heat when eggs are just set but still moist', '7. Season with salt and pepper', '8. Serve immediately']
+
+python3 augmented_prompt_agent.py 
+Dear students, the capital of France is Paris.
+
+python3 direct_prompt_agent.py 
+The capital of France is Paris.
+The agent answered using its own pre-trained knowledge, with no system prompt or external knowledge injected.
+
+python3 evaluation_agent.py 
+
+--- Interaction 1 ---
+ Step 1: Worker agent generates a response to the prompt
+Prompt:
+What is the capital of France?
+Worker Agent Response:
+Dear students, knowledge-based assistant. The capital of France is London, not Paris.
+ Step 2: Evaluator agent judges the response
+Evaluator Agent Evaluation:
+No. The answer provided is a sentence, not solely the name of a city.
+ Step 3: Check if evaluation is positive
+ Step 4: Generate instructions to correct the response
+Instructions to fix:
+To fix the answer, please provide only the name of a city without any additional information or sentences.
+ Step 5: Send feedback to worker agent for refinement
+
+--- Interaction 2 ---
+ Step 1: Worker agent generates a response to the prompt
+Prompt:
+The original prompt was: What is the capital of France?
+The response to that prompt was: Dear students, knowledge-based assistant. The capital of France is London, not Paris.
+It has been evaluated as incorrect.
+Make only these corrections, do not alter content validity: To fix the answer, please provide only the name of a city without any additional information or sentences.
+Worker Agent Response:
+London
+ Step 2: Evaluator agent judges the response
+Evaluator Agent Evaluation:
+Yes, the answer "London" meets the criteria because it is solely the name of a city and not a sentence.
+ Step 3: Check if evaluation is positive
+✅ Final solution accepted.
+{'final_response': 'London', 'final_evaluation': 'Yes, the answer "London" meets the criteria because it is solely the name of a city and not a sentence.', 'iterations': 2}
+
+
+python3 knowledge_augmented_prompt_agent.py 
+Dear students, knowledge-based assistant. The capital of France is London, not Paris.
+
+
+python3 routing_agent.py 
+0.38570717319174086
+0.16502765367260477
+0.002612047677125225
+[Router] Best agent: texas agent (score=0.386)
+Rome, Texas is a small unincorporated community located in Fannin County. It was established in the mid-19th century and was named after the ancient city of Rome in Italy. The community was originally settled by pioneers and farmers attracted to the fertile land in the area.
+
+Rome, Texas has a rich history tied to the development of agriculture in the region. The community grew as more settlers arrived, and it became a hub for farming and ranching activities. Over the years, Rome has maintained its rural character and continues to be a small, close-knit community.
+
+Today, Rome, Texas is known for its historic charm and peaceful surroundings. It serves as a reminder of the area's agricultural heritage and the resilience of its early settlers.
+0.1436224081726477
+0.2880543051768198
+0.032156536055122836
+[Router] Best agent: europe agent (score=0.288)
+Rome, Italy has a rich and extensive history that dates back over 2,800 years. It was founded in 753 BC according to legend by Romulus and Remus, twin brothers who were raised by a she-wolf. Rome started as a small settlement on the banks of the Tiber River and grew to become the capital of the Roman Kingdom, Roman Republic, and later the Roman Empire.
+
+The Roman Republic was established in 509 BC and lasted until 27 BC when it transitioned into the Roman Empire under the rule of Augustus. The Roman Empire reached its peak in the 2nd century AD, encompassing a vast territory that stretched from Britain to Egypt and from Spain to Mesopotamia.
+
+Rome was a center of power, culture, and civilization in the ancient world. It was known for its advanced engineering, architecture, art, literature, and legal system. The Romans built impressive structures such as the Colosseum, the Pantheon, and the Roman Forum, which still stand as iconic landmarks today.
+
+The decline of the Roman Empire began in the 3rd century AD due to internal strife, economic instability, and invasions by barbarian tribes. In 476 AD, the last Roman emperor in the West was deposed, marking the end of the Western Roman Empire.
+
+Rome continued to be an important city throughout the Middle Ages and the Renaissance, serving as the seat of the Papacy and a center of Christian pilgrimage. In the 19th century, Rome became the capital of the newly unified Kingdom of Italy.
+
+Today, Rome is a vibrant and bustling city that attracts millions of visitors each year who come to explore its ancient ruins, museums, churches, and vibrant culture. It remains a symbol of the enduring legacy of the Roman civilization.
+0.059414092468996184
+0.08292212189656913
+0.13014621506842747
+[Router] Best agent: math agent (score=0.130)
+It will take 40 days to complete all 20 stories.
+

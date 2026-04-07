@@ -1,5 +1,5 @@
 # TODO: 1 - import the OpenAI class from the openai library
-from openai import OpenAI 
+from openai import OpenAI
 import numpy as np
 import pandas as pd
 import re
@@ -7,12 +7,20 @@ import csv
 import uuid
 from datetime import datetime
 
+
+def _validate_api_key(api_key):
+    """Raise ValueError early if the API key is missing or malformed."""
+    if not api_key or not isinstance(api_key, str):
+        raise ValueError("OpenAI API key must be a non-empty string.")
+
+
 # DirectPromptAgent class definition
 class DirectPromptAgent:
     
     def __init__(self, openai_api_key):
         # Initialize the agent
         # TODO: 2 - Define an attribute named openai_api_key to store the OpenAI API key provided to this class.
+        _validate_api_key(openai_api_key)
         self.openai_api_key = openai_api_key
 
     def respond(self, prompt):
@@ -34,6 +42,7 @@ class AugmentedPromptAgent:
     def __init__(self, openai_api_key, persona):
         """Initialize the agent with given attributes."""
         # TODO: 1 - Create an attribute for the agent's persona
+        _validate_api_key(openai_api_key)
         self.persona = persona
         self.openai_api_key = openai_api_key
 
@@ -46,6 +55,7 @@ class AugmentedPromptAgent:
             model="gpt-3.5-turbo",
             messages=[
                 # TODO: 3 - Add a system prompt instructing the agent to assume the defined persona and explicitly forget previous context.
+                {"role": "system", "content": f"{self.persona}. Forget all previous context."},
                 {"role": "user", "content": input_text}
             ],
             temperature=0
@@ -58,6 +68,7 @@ class AugmentedPromptAgent:
 class KnowledgeAugmentedPromptAgent:
     def __init__(self, openai_api_key, persona, knowledge):
         """Initialize the agent with provided attributes."""
+        _validate_api_key(openai_api_key)
         self.persona = persona
         # TODO: 1 - Create an attribute to store the agent's knowledge.
         self.knowledge = knowledge
@@ -103,6 +114,7 @@ class RAGKnowledgePromptAgent:
         chunk_size (int): The size of text chunks for embedding. Defaults to 2000.
         chunk_overlap (int): Overlap between consecutive chunks. Defaults to 100.
         """
+        _validate_api_key(openai_api_key)
         self.persona = persona
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
@@ -119,7 +131,7 @@ class RAGKnowledgePromptAgent:
         Returns:
         list: The embedding vector.
         """
-        client = OpenAI(base_url="https://openai.vocareum.com/v1", api_key=self.openai_api_key)
+        client = OpenAI(api_key=self.openai_api_key)
         response = client.embeddings.create(
             model="text-embedding-3-large",
             input=text,
@@ -212,7 +224,7 @@ class RAGKnowledgePromptAgent:
 
         best_chunk = df.loc[df['similarity'].idxmax(), 'text']
 
-        client = OpenAI(base_url="https://openai.vocareum.com/v1", api_key=self.openai_api_key)
+        client = OpenAI(api_key=self.openai_api_key)
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
@@ -229,6 +241,7 @@ class EvaluationAgent:
     def __init__(self, openai_api_key, persona, evaluation_criteria, worker_agent, max_interactions):
         # Initialize the EvaluationAgent with given attributes.
         # TODO: 1 - Declare class attributes here
+        _validate_api_key(openai_api_key)
         self.openai_api_key = openai_api_key
         self.persona = persona
         self.evaluation_criteria = evaluation_criteria
@@ -303,6 +316,7 @@ class RoutingAgent():
 
     def __init__(self, openai_api_key, agents):
         # Initialize the agent with given attributes
+        _validate_api_key(openai_api_key)
         self.openai_api_key = openai_api_key
         self.agents = agents  # TODO: 1 - Define an attribute to hold the agents, call it agents
 
@@ -349,6 +363,7 @@ class ActionPlanningAgent:
 
     def __init__(self, openai_api_key, knowledge):
         # TODO: 1 - Initialize the agent attributes here
+        _validate_api_key(openai_api_key)
         self.openai_api_key = openai_api_key
         self.knowledge = knowledge
 
@@ -362,7 +377,8 @@ class ActionPlanningAgent:
             messages=[
                 {"role": "system", "content": f"You are an action planning agent. Using your knowledge, you extract from the user prompt the steps requested to complete the action the user is asking for. You return the steps as a list. Only return the steps in your knowledge. Forget any previous context. This is your knowledge: {self.knowledge}"},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            temperature=0
         )
 
         # Provide the following system prompt along with the user's prompt:
@@ -372,6 +388,6 @@ class ActionPlanningAgent:
 
         # TODO: 5 - Clean and format the extracted steps by removing empty lines and unwanted text
         response_text = response_text.strip()
-        steps = response_text.split("\n")
+        steps = [s.strip() for s in response_text.split("\n") if s.strip()]
 
         return steps
