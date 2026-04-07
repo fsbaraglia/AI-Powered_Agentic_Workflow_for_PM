@@ -87,9 +87,11 @@ class KnowledgeAugmentedPromptAgent:
                 #             "Use only the following knowledge to answer, do not use your own knowledge: _knowledge_"
                 #           - Final instruction:
                 #             "Answer the prompt based on this knowledge, not your own."
-                {"role": "system", "content": f"You are {self.persona} knowledge-based assistant. Forget all previous context."},
-                {"role": "system", "content": f"Use only the following knowledge to answer, do not use your own knowledge: {self.knowledge}"},
-                {"role": "system", "content": "Answer the prompt based on this knowledge, not your own."},
+                {"role": "system", "content": (
+                    f"You are {self.persona} knowledge-based assistant. Forget all previous context. "
+                    f"Use only the following knowledge to answer, do not use your own knowledge: {self.knowledge}. "
+                    "Answer the prompt based on this knowledge, not your own."
+                )},
                 {"role": "user", "content": input_text}
                 # TODO: 3 - Add the user's input prompt here as a user message.
             ],

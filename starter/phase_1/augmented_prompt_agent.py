@@ -31,6 +31,8 @@ except APIError as e:
 # TODO: 4 - Add a comment explaining:
 # - What knowledge the agent likely used to answer the prompt.
 # - How the system prompt specifying the persona affected the agent's response.
+
+# Explanation: 
 # The agent used its own pre-trained knowledge to answer (Paris is the capital of France).
 # The system prompt shaped the tone and format: the response begins with "Dear students,"
 # because the persona instructed the LLM to behave as a college professor addressing a class.
